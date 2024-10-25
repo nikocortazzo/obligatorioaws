@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragmentos/plantilla-maestra::html(~{::title}, ~{::body})}">
+<head>    
+    <title>Envíos Bios - Ingresar</title>   
+</head>
+<body th:remove="tag">
+    <div class="formulario">
+        <h1>Iniciar Sesión</h1>
+        <form method="post" class="login">
+            <div class="username">    
+                <label for="nombreUsuario">Nombre de Usuario</label> 
+                <input type="text" name="username" id="nombreUsuario">
+            </div>
+            <div class="username">   
+                <label for="contrasena">Contraseña</label>                            
+                <input type="password" name="password" id="contrasena">                
+            </div>
+            <div>
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                <input type="submit" value="Ingresar" class="boton">
+            </div>
+        </form>
+    
+        <br>
+        <div class="registrarse">
+            ¿No tienes cuenta? <a th:href="@{/registrarcliente}" class="registro">Regístrate aquí</a>.
+        </div>
+        
+    </div>
+    
+    <p th:if="${mensaje}" th:text="${mensaje}"></p>
+
+    <script>
+        document.getElementById('nombreUsuario').focus();
+        document.getElementById('nombreUsuario').select();
+    </script>
+</body>
+</html>

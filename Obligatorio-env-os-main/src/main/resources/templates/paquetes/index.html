@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragmentos/plantilla-maestra::html(~{::title}, ~{::body})}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Envíos Bios - Paquetes</title>
+</head>
+<body th:remove="tag">
+    <h1>Paquetes</h1>
+
+    <p th:if="${mensaje}" th:text="${mensaje}"></p>
+
+    <form id="formularioBusqueda">
+        <div>
+            <input type="hidden" name="filtroEstado" value="0" />
+            <input type="hidden" name="filtroFechaRegistro" value="0" />
+            <input type="search" name="criterio" th:value="${param.criterio}" id="criterio" placeholder="Nombre de usuario" value="Buscar">
+        </div>
+    </form>
+
+    <p><a th:href="@{paquetes/agregar}" title="Agregar" class="volver"><i class="ri-add-large-fill"></i></a></p>
+
+    <form id="formularioOpcionesListado" class="en-linea">
+        <div>
+            <input type="hidden" name="criterio" th:value="${param.criterio}">
+            <select name="filtroEstado" id="filtroEstado">
+                <option value="0" th:selected="${param.filtroEstado} ne null and ${param.filtroEstado[0]} eq 0">A levantar</option>
+                <option value="1" th:selected="${param.filtroEstado} eq null or ${param.filtroEstado[0]} eq 1">Levantado</option>
+                <option value="2" th:selected="${param.filtroEstado} ne null and ${param.filtroEstado[0]} eq 2">En reparto</option>
+                <option value="3" th:selected="${param.filtroEstado} ne null and ${param.filtroEstado[0]} eq 3">Entregado</option>
+                <option value="4" th:selected="${param.filtroEstado} ne null and ${param.filtroEstado[0]} eq 4">Devuelto</option>
+            </select>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <select name="tamanioPagina" id="tamanioPagina">
+                <option value="2" th:selected="${param.tamanioPagina} ne null and ${param.tamanioPagina[0]} eq 2">2 x página</option>
+                <option value="20" th:selected="${param.tamanioPagina} eq null or ${param.tamanioPagina[0]} eq 20">20 x página</option>
+            </select>
+        </div>
+    </form>
+
+    <table class="listado">
+        <tr>
+            <th>Identificador</th><th>Fecha de Registro</th><th>Destinatario</th><th>Estado de Rastreo</th>
+        </tr>
+        <tr th:each="p : ${paquetes}">
+            <td th:text="${p.id}"></td>
+            <td th:text="${#temporals.format(p.fechaHora, 'dd/MM/yyyy HH:mm')}"></td>
+            <td th:text="${p.nombreDestinatario}"></td>
+            <td th:text="${p.estadoRastreo.descripcion}"></td>
+            <td>
+                <a th:href="@{/paquetes/{id}(id=${p.id})}" title="Ver Detalle" class="volver"><i class="ri-eye-fill"></i></a>
+                <a th:href="@{/paquetes/modificar(id=${p.id})}" title="Modificar" class="volver"><i class="ri-pencil-fill"></i></a>
+                <a th:href="@{/paquetes/eliminar(id=${p.id})}" title="Eliminar" class="volver"><i class="ri-delete-bin-6-fill"></i></a>                
+            </td>
+        </tr>
+    </table>
+
+    <!-- <p>Cantidad de Paquetes: <span th:text="${paquetes.totalElements}"></span></p> -->
+
+    <!-- Navegación de Páginas -->
+    <div class="pagination">
+        <span th:if="${paquetes.hasPrevious()}">
+            <a th:href="@{paquetes(pagina=${paquetes.number - 1}, criterio=${param.criterio})}" class="volver">Anterior</a>
+        </span>
+        <span th:if="${paquetes.hasNext()}">
+            <a th:href="@{paquetes(pagina=${paquetes.number + 1}, criterio=${param.criterio})}" class="volver">Siguiente</a>
+        </span>
+        <p>Página <span th:text="${paquetes.number + 1}"></span> de <span th:text="${paquetes.totalPages}"></span></p>
+    </div>
+
+    <script>
+        document.getElementById('formularioBusqueda').addEventListener('search', function() {
+            if (!document.getElementById('criterio').value) {
+                window.location = '/paquetes';
+            }
+        });
+
+        document.getElementById('criterio').focus();
+        document.getElementById('criterio').select();
+    </script>
+
+</body>
+</html>
